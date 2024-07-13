@@ -44,6 +44,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'Province', 'url' => ['/province/index']],
                 ['label' => 'Kabupaten / Kota', 'url' => ['/kabupaten/index']],
+                ['label' => 'Penduduk', 'url' => ['/penduduk/index']],
             ]
 
         ]);

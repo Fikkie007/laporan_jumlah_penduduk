@@ -2,12 +2,27 @@
 
 /** @var yii\web\View $this */
 
+use app\models\Kabupaten;
 use app\models\Provinces;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $provOpts = Provinces::options('province_id', 'name');
+$kabOpts = Kabupaten::options('kabupaten_id', 'name', ['province_id' => $searchModel->prov]);
+
+$ajaxUrl = Url::to(['/penduduk/options']);
+?>
+
+<?php
+$this->registerJs("
+    $(document).ready(function() {
+        $('#province-id').change(function(){
+            $(this).closest('form').submit();
+        });
+    });
+");
 ?>
 
 <div class="d-flex justify-content-between mb-3">
@@ -32,14 +47,21 @@ $provOpts = Provinces::options('province_id', 'name');
         <?= Html::dropDownList('prov', $searchModel->prov ?? null, $provOpts, [
             'class' => 'form-select',
             'prompt' => 'Semua Provinsi',
-            'onchange' => "$(this).trigger('submit')"
+            'id' => 'province-id',
+            'onchange' => "$(this).trigger('change');"
+        ]) ?>
+
+        <?= Html::dropDownList('kab', $searchModel->kab ?? null, $kabOpts, [
+            'class' => 'form-select',
+            'prompt' => 'Pilih Kabupaten / Kota',
+            'id' => 'kabupaten-id',
+            'onchange' => "$(this).closest('form').submit();"
         ]) ?>
 
         <?= Html::input('search', 'search', $searchModel->search, [
             'class' => 'mr-sm-2 form-control',
             'placeholder' => 'Pencarian ...',
         ]) ?>
-
     </div>
     <?php ActiveForm::end(); ?>
 </div>
@@ -54,6 +76,7 @@ $provOpts = Provinces::options('province_id', 'name');
         ],
         'name',
         'province.name',
+        'kabupaten.name',
         [
             'class' => \jeemce\grid\ActionColumn::class,
         ],

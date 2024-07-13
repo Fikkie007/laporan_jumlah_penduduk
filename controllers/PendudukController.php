@@ -2,31 +2,42 @@
 
 namespace app\controllers;
 
-use app\models\Provinces;
-use jeemce\helpers\ArrayHelper;
+use app\models\Kabupaten;
+use app\models\Penduduk;
 use Yii;
 use yii\base\DynamicModel;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
-class ProvinceController extends \yii\web\Controller
+class PendudukController extends \yii\web\Controller
 {
-
     use \jeemce\controllers\AppCrudTrait;
 
-    protected $modelClass = Provinces::class;
+    protected $modelClass = Penduduk::class;
 
     public function actionIndex()
     {
         $searchModel = new DynamicModel(array_merge([
             'search',
+            'prov',
+            'kab',
         ], $this->request->queryParams));
 
         $searchQuery = $this->modelClass::find()
-            ->andFilterWhere(['like', 'LOWER(name)', strtolower($searchModel->search)]);
+            ->joinWith('province p')
+            ->joinWith('kabupaten k')
+            ->andFilterWhere([
+                'OR',
+                ['like', 'LOWER(k.name)', strtolower($searchModel->search)],
+                ['like', 'LOWER(p.name)', strtolower($searchModel->search)],
+                ['like', 'LOWER(penduduk.name)', strtolower($searchModel->search)],
+            ])
+            ->andFilterWhere(['penduduk.province_id' => $searchModel->prov])
+            ->andFilterWhere(['penduduk.kabupaten_id' => $searchModel->kab]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $searchQuery,
@@ -57,6 +68,22 @@ class ProvinceController extends \yii\web\Controller
 
         return $this->render('form', get_defined_vars());
     }
+
+    public function actionOptions($province_id = null)
+    {
+        $kabupatenOpts = Kabupaten::find()
+            ->where(['province_id' => $province_id])
+            ->orderBy('name')
+            ->all();
+
+        $options = '';
+        foreach ($kabupatenOpts as $kabupaten) {
+            $options .= "<option value='{$kabupaten->kabupaten_id}'>{$kabupaten->name}</option>";
+        }
+
+        return $options;
+    }
+
 
     public function actionDelete($id)
     {
