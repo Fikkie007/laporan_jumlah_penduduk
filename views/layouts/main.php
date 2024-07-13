@@ -43,6 +43,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             'options' => ['class' => 'navbar-nav'], 'items' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'Province', 'url' => ['/province/index']],
+                ['label' => 'Kabupaten / Kota', 'url' => ['/kabupaten/index']],
             ]
 
         ]);
