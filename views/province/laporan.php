@@ -1,9 +1,8 @@
 <?php
 
-/** @var yii\web\View $this */
-
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 ?>
@@ -11,20 +10,11 @@ use yii\widgets\ActiveForm;
 <div class="d-flex justify-content-between mb-3">
     <div>
         <?= Html::a(
-            '<i class="bi bi-plus me-1"></i> Tambah Data',
-            ['form'],
+            '<i class="bi bi-plus me-1"></i> Export',
+            ['export'],
             [
                 'data-pjax' => 0,
                 'class' => 'btn btn-success',
-            ]
-        ) ?>
-
-        <?= Html::a(
-            '<i class="bi bi-plus me-1"></i> Laporan',
-            ['laporan'],
-            [
-                'data-pjax' => 0,
-                'class' => 'btn btn-primary',
             ]
         ) ?>
     </div>
@@ -32,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <div>
         <?php $form = ActiveForm::begin([
-            'action' => ['index'],
+            'action' => Url::current(['laporan']),
             'method' => 'get',
             'options' => ['class' => 'form-inline']
         ]); ?>
@@ -55,12 +45,12 @@ use yii\widgets\ActiveForm;
             'class' => jeemce\grid\SerialColumn::class
         ],
         'name',
-        [
-            'class' => \jeemce\grid\ActionColumn::class,
-        ],
+        'totalPenduduk'
     ],
     'pager' => [
         'class' => yii\bootstrap5\LinkPager::class,
         'options' => ['class' => 'pagination justify-content-center'],
     ],
 ]) ?>
+
+<?php \yii\widgets\Pjax::end() ?>

@@ -58,6 +58,37 @@ class ProvinceController extends \yii\web\Controller
         return $this->render('form', get_defined_vars());
     }
 
+    public function actionLaporan()
+    {
+        $searchModel = new DynamicModel(array_merge([
+            'search',
+        ], $this->request->queryParams));
+
+        $searchQuery = $this->modelClass::find()
+            ->andFilterWhere(['like', 'LOWER(name)', strtolower($searchModel->search)]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $searchQuery,
+        ]);
+
+        return $this->render('laporan', get_defined_vars());
+    }
+
+    public function actionExport()
+    {
+
+        $searchModel = new DynamicModel(array_merge([
+            'search',
+        ], $this->request->queryParams));
+
+        $searchQuery = $this->modelClass::find()
+            ->andFilterWhere(['like', 'LOWER(name)', strtolower($searchModel->search)]);
+
+        $models = $searchQuery->all();
+
+        return $this->render('excel', get_defined_vars());
+    }
+
     public function actionDelete($id)
     {
         $this->modelClass::findOne($id)->delete();

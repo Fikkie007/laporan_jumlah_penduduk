@@ -24,7 +24,7 @@
     "yiisoft/yii2-bootstrap5": "@dev",
     "yiisoft/yii2-symfonymailer": "@dev",
     "jeemce/yii2": "@dev",
-    "phpoffice/phpspreadsheet": "~2"
+    "phpoffice/phpspreadsheet": "^2.1"
   },
   "provide": {
     "npm-asset/bootstrap": "^4 || ^4.3 || ^4.6"

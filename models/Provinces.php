@@ -41,6 +41,21 @@ class Provinces extends Model
         return [
             'province_id' => 'Province ID',
             'name' => 'Name',
+
+            'totalPenduduk' => 'Banyak Penduduk'
         ];
+    }
+
+    public function getTotalPenduduk()
+    {
+        $totalPenduduk = Yii::$app->db->createCommand(
+            <<<SQL
+                SELECT COUNT(*) AS total_villages 
+                FROM penduduk 
+                WHERE province_id = :province_id
+            SQL
+        )->bindValue(':province_id', $this->province_id)
+            ->queryScalar() ?: 0;
+        return $totalPenduduk;
     }
 }
