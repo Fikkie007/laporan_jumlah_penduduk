@@ -45,7 +45,15 @@ $this->registerJs("
 
 <?= $form->field($model, 'tanggal_lahir')->textInput(['type' => 'date']) ?>
 
+<?= $form->field($model, 'nik')->textInput(['type' => 'number']) ?>
+
 <?= $form->field($model, 'alamat')->textarea(['rows' => 4]) ?>
+
+<?php if (empty($model->id)) { ?>
+    <?= $form->field($model, 'created_at')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
+<?php } else { ?>
+    <?= $form->field($model, 'updated_at')->hiddenInput(['value' => date('Y-m-d H:i:s')])->label(false) ?>
+<?php } ?>
 
 <?= $form->field($model, 'province_id')->dropDownList($provOpts, [
     'prompt' => 'Pilih Provinsi',

@@ -36,7 +36,7 @@ class Penduduk extends \jeemce\models\Model
     public function rules()
     {
         return [
-            [['name', 'jenis_kelamin', 'tanggal_lahir', 'alamat', 'province_id', 'kabupaten_id'], 'required'],
+            [['name', 'jenis_kelamin', 'tanggal_lahir', 'alamat', 'province_id', 'kabupaten_id', 'nik'], 'required'],
             [['jenis_kelamin', 'province_id', 'kabupaten_id'], 'integer'],
             [['tanggal_lahir', 'created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 100],
@@ -44,6 +44,7 @@ class Penduduk extends \jeemce\models\Model
             [['kabupaten_id'], 'exist', 'skipOnError' => true, 'targetClass' => Kabupaten::class, 'targetAttribute' => ['kabupaten_id' => 'kabupaten_id']],
             [['province_id'], 'exist', 'skipOnError' => true, 'targetClass' => Provinces::class, 'targetAttribute' => ['province_id' => 'province_id']],
             [['name'], 'unique', 'targetClass' => Penduduk::class, 'message' => 'Nama Sudah Ada'],
+            [['nik'], 'unique', 'targetClass' => Penduduk::class, 'message' => 'NIK Sudah Ada'],
         ];
     }
 
@@ -60,11 +61,14 @@ class Penduduk extends \jeemce\models\Model
             'alamat' => 'Alamat',
             'province_id' => 'Province ID',
             'kabupaten_id' => 'Kabupaten ID',
+            'nik' => 'NIK',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
 
             'province.name' => 'Nama Provinsi',
-            'kabupaten.name' => 'Nama Kabupaten / Kota'
+            'kabupaten.name' => 'Nama Kabupaten / Kota',
+            'jenisKelaminLabel' => 'Jenis Kelamin',
+            'detailAlamat' => 'Alamat',
         ];
     }
 
@@ -86,5 +90,15 @@ class Penduduk extends \jeemce\models\Model
     public function getProvince()
     {
         return $this->hasOne(Provinces::class, ['province_id' => 'province_id']);
+    }
+
+    public function getJenisKelaminLabel()
+    {
+        return $this->jenis_kelamin === 1 ? 'Laki-laki' : 'Perempuan';
+    }
+
+    public function getDetailAlamat()
+    {
+        return "{$this->alamat}, {$this->kabupaten->name}, {$this->province->name}";
     }
 }

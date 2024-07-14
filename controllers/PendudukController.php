@@ -84,6 +84,33 @@ class PendudukController extends \yii\web\Controller
         return $options;
     }
 
+    public function actionExport()
+    {
+
+        $searchModel = new DynamicModel(array_merge([
+            'search',
+            'prov',
+            'kab',
+        ], $this->request->queryParams));
+
+        $searchQuery = $this->modelClass::find()
+            ->joinWith('province p')
+            ->joinWith('kabupaten k')
+            ->andFilterWhere([
+                'OR',
+                ['like', 'LOWER(k.name)', strtolower($searchModel->search)],
+                ['like', 'LOWER(p.name)', strtolower($searchModel->search)],
+                ['like', 'LOWER(penduduk.name)', strtolower($searchModel->search)],
+            ])
+            ->andFilterWhere(['penduduk.province_id' => $searchModel->prov])
+            ->andFilterWhere(['penduduk.kabupaten_id' => $searchModel->kab]);
+
+        $models = $searchQuery->all();
+
+        return $this->render('excel', get_defined_vars());
+    }
+
+
 
     public function actionDelete($id)
     {

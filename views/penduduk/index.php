@@ -3,6 +3,7 @@
 /** @var yii\web\View $this */
 
 use app\models\Kabupaten;
+use app\models\Penduduk;
 use app\models\Provinces;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -33,6 +34,15 @@ $this->registerJs("
             [
                 'data-pjax' => 0,
                 'class' => 'btn btn-success',
+            ]
+        ) ?>
+
+        <?= Html::a(
+            '<i class="bi bi-plus me-1"></i> Export',
+            Url::current(['export']),
+            [
+                'data-pjax' => 0,
+                'class' => 'btn btn-primary',
             ]
         ) ?>
     </div>
@@ -74,12 +84,15 @@ $this->registerJs("
         [
             'class' => jeemce\grid\SerialColumn::class
         ],
-        'name',
-        'province.name',
-        'kabupaten.name',
         [
             'class' => \jeemce\grid\ActionColumn::class,
         ],
+        'name',
+        'province.name',
+        'kabupaten.name',
+        'detailAlamat',
+        'jenisKelaminLabel',
+        'created_at:date'
     ],
     'pager' => [
         'class' => yii\bootstrap5\LinkPager::class,
