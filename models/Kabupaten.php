@@ -52,8 +52,23 @@ class Kabupaten extends \jeemce\models\Model
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
 
-            'province.name' => 'Nama Provinsi'
+            'province.name' => 'Nama Provinsi',
+            'totalPenduduk' => 'Banyak Penduduk'
         ];
+    }
+
+    public function getTotalPenduduk()
+    {
+        $totalPenduduk = Yii::$app->db->createCommand(
+            <<<SQL
+                SELECT COUNT(*) AS total_villages 
+                FROM penduduk
+                WHERE kabupaten_id = :kabupaten_id
+            SQL
+        )->bindValue(':kabupaten_id', $this->kabupaten_id)
+            ->queryScalar() ?: 0;
+
+        return $totalPenduduk;
     }
 
     /**

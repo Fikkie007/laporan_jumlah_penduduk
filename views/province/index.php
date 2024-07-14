@@ -64,3 +64,5 @@ use yii\widgets\ActiveForm;
         'options' => ['class' => 'pagination justify-content-center'],
     ],
 ]) ?>
+
+<?php \yii\widgets\Pjax::end() ?>

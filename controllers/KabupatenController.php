@@ -64,6 +64,54 @@ class KabupatenController extends \yii\web\Controller
         return $this->render('form', get_defined_vars());
     }
 
+    public function actionLaporan()
+    {
+        $searchModel = new DynamicModel(array_merge([
+            'search',
+            'prov',
+        ], $this->request->queryParams));
+
+        $searchQuery = $this->modelClass::find()
+            ->joinWith('province')
+            ->andFilterWhere([
+                'OR',
+                ['like', 'LOWER(kabupaten.name)', strtolower($searchModel->search)],
+                ['like', 'LOWER(provinces.name)', strtolower($searchModel->search)],
+            ])
+            ->andFilterWhere(['kabupaten.province_id' => $searchModel->prov]);
+
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $searchQuery,
+        ]);
+
+        return $this->render('laporan', get_defined_vars());
+    }
+
+    public function actionExport()
+    {
+
+        $searchModel = new DynamicModel(array_merge([
+            'search',
+            'prov',
+        ], $this->request->queryParams));
+
+        $searchQuery = $this->modelClass::find()
+            ->joinWith('province')
+            ->andFilterWhere([
+                'OR',
+                ['like', 'LOWER(kabupaten.name)', strtolower($searchModel->search)],
+                ['like', 'LOWER(provinces.name)', strtolower($searchModel->search)],
+            ])
+            ->andFilterWhere(['kabupaten.province_id' => $searchModel->prov]);
+
+
+        $models = $searchQuery->all();
+
+        return $this->render('excel', get_defined_vars());
+    }
+
+
     public function actionDelete($id)
     {
         $this->modelClass::findOne($id)->delete();
